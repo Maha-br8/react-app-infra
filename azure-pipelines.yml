@@ -1,1 +1,18 @@
+trigger:
+- main
 
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'AzureConnection'   # 🔁 Replace with your service connection name
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az group create --name react-bicep-rg --location "East US"
+      az deployment group create \
+        --resource-group react-bicep-rg \
+        --template-file main.bicep \
+        --parameters webAppName=my-react-app-service appServicePlanName=myAppPlan
